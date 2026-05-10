@@ -571,13 +571,6 @@
                     </div>
                 </div>
 
-                <hr class="divider">
-
-                <div class="option-group">
-                    <span class="option-label">Additional Details</span>
-                    <textarea id="detailsInput" placeholder="Describe specific elements, characters, objects, or anything else you want included…" rows="3"></textarea>
-                </div>
-
                 <div class="error-box" id="errorBox">
                     <span class="error-text" id="errorText"></span>
                     <button class="btn-dismiss" id="dismissBtn">OK</button>
@@ -687,7 +680,6 @@
 
         const generateBtn  = document.getElementById('generateBtn');
         const clearAllBtn  = document.getElementById('clearAllBtn');
-        const detailsInput = document.getElementById('detailsInput');
         const loading      = document.getElementById('loading');
         const placeholder  = document.getElementById('placeholder');
         const promptWrap   = document.getElementById('promptWrap');
@@ -701,7 +693,6 @@
         clearAllBtn.addEventListener('click', () => {
             document.querySelectorAll('.chip.active').forEach(c => c.classList.remove('active'));
             Object.keys(selections).forEach(k => selections[k] = '');
-            detailsInput.value = '';
             personOptions.classList.remove('visible');
             promptWrap.style.display = 'none';
             placeholder.style.display = 'flex';
@@ -710,11 +701,11 @@
         });
 
         generateBtn.addEventListener('click', async () => {
-            const payload = { ...selections, details: detailsInput.value.trim() };
+            const payload = { ...selections };
             const hasSelection = Object.values(payload).some(v => v.trim());
 
             if (!hasSelection) {
-                showError('Please select at least one option or add details.');
+                showError('Please select at least one option.');
                 return;
             }
 

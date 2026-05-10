@@ -79,7 +79,6 @@ Accepts JSON with any combination of these fields (at least one required):
 | `age`        | Person age *(portrait only)*         |
 | `expression` | Facial expression *(portrait only)*  |
 | `quality`    | Quality / finish modifiers           |
-| `details`    | Free-text additional details         |
 
 **Response:**
 ```json

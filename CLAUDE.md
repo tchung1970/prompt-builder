@@ -2,7 +2,8 @@
 
 A web app for generating detailed AI image prompts by selecting options from a visual chip-based UI. Selections are sent to Google Gemini, which writes a rich, coherent prompt ready to paste into any image generator.
 
-**Live URL:** https://ai.tchung.org/prompt-builder/
+**Server:** https://ai.tchung.org/prompt-builder/
+**GitHub:** https://github.com/tchung1970/prompt-builder
 
 ---
 
@@ -54,7 +55,6 @@ Accepts a JSON body with any combination of the fields below. At least one field
 | `age`        | Person age *(portrait only)*             |
 | `expression` | Facial expression *(portrait only)*      |
 | `quality`    | Quality / finish modifiers               |
-| `details`    | Free-text additional details             |
 
 **Success response:**
 ```json
@@ -63,7 +63,7 @@ Accepts a JSON body with any combination of the fields below. At least one field
 
 **Error response:**
 ```json
-{ "error": "Please select at least one option or add details." }
+{ "error": "Please select at least one option." }
 ```
 
 ---

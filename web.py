@@ -52,7 +52,6 @@ def build_user_message(options: dict) -> str:
         ("age",      "Age"),
         ("expression", "Expression"),
         ("quality",  "Quality / Finish"),
-        ("details",  "Additional Details"),
     ]
     for key, label in labels:
         val = options.get(key, "").strip()
@@ -91,10 +90,9 @@ def generate():
         "age":        data.get("age", ""),
         "expression": data.get("expression", ""),
         "quality":  data.get("quality", ""),
-        "details":  data.get("details", ""),
     }
     if not any(v.strip() for v in options.values()):
-        return jsonify({"error": "Please select at least one option or add details."}), 400
+        return jsonify({"error": "Please select at least one option."}), 400
     try:
         prompt_text = generate_prompt(options)
         return jsonify({"prompt": prompt_text})
