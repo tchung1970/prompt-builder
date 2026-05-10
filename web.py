@@ -7,8 +7,8 @@ import os
 from pathlib import Path
 
 app_dir = Path(__file__).parent
-env_file = app_dir / ".env" if (app_dir / ".env").exists() else Path.home() / ".env"
-if env_file.exists():
+env_file = next((p for p in [app_dir / ".env", Path("/home/tchung/.env"), Path("/root/.env")] if p.exists()), None)
+if env_file and env_file.exists():
     with open(env_file) as f:
         for line in f:
             line = line.strip()

@@ -162,7 +162,11 @@ sudo systemctl stop prompt-builder
 sudo journalctl -u prompt-builder -f
 ```
 
-### `.env` format
+### `.env` location and format
+
+Stored at `/root/.env` (not in the web root) so it is never accidentally served by nginx.
+`web.py` searches for `.env` in this order: app directory → `/home/tchung/.env` → `/root/.env`.
+
 ```
 GEMINI_API_KEY=your_key_here
 ```
