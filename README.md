@@ -2,7 +2,11 @@
 
 A web app for generating detailed AI image prompts. Select options from a visual chip-based UI and let Google Gemini write a rich, coherent prompt ready to paste into any image generator.
 
-**Live demo:** https://ai.tchung.org/prompt-builder/
+---
+
+## Live Demo
+
+**https://ai.tchung.org/prompt-builder/**
 
 ---
 
@@ -68,6 +72,10 @@ Accepts JSON with any combination of these fields (at least one required):
 ```json
 { "prompt": "A cinematic portrait of a young Korean woman..." }
 ```
+
+## License
+
+MIT License — see [LICENSE](LICENSE) for details.
 
 ---
 
