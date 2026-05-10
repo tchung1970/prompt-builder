@@ -86,6 +86,18 @@ Accepts JSON with any combination of these fields (at least one required):
 { "prompt": "A cinematic portrait of a young Korean woman..." }
 ```
 
+## Recommended Image Generation Models
+
+After a prompt is generated, the UI displays a list of suggested image models you can paste it into:
+
+| Model                | Notes                                    |
+|----------------------|------------------------------------------|
+| Google Nano Banana 2 | Google next-gen creative image model     |
+| GPT Image 2          | OpenAI latest image generation model     |
+| FLUX.2 Pro           | Next-gen photorealism and fine detail    |
+| Midjourney v8.1      | Best for artistic, stylized & cinematic looks |
+| Seedream 5 Lite      | Fast, high-quality generation            |
+
 ## License
 
 MIT License — see [LICENSE](LICENSE) for details.
