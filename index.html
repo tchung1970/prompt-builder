@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Builder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #1e1e2e;
+            color: #cdd6f4;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 50px 20px 60px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            margin-bottom: 48px;
+            color: #fff;
+        }
+
+        h1 span {
+            background: linear-gradient(135deg, #89b4fa, #cba6f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container { width: 100%; max-width: 1300px; }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; }
+            h1 { font-size: 2.2rem; }
+        }
+
+        .card {
+            background: #282840;
+            border-radius: 24px;
+            border: 1px solid #363652;
+            padding: 32px;
+        }
+
+        .option-group { margin-bottom: 26px; }
+        .option-group:last-of-type { margin-bottom: 0; }
+
+        .option-label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #89b4fa;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Person sub-options — animated reveal */
+        .person-options {
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.35s ease, opacity 0.25s ease, margin-bottom 0.35s ease;
+            margin-bottom: 0;
+        }
+
+        .person-options.visible {
+            max-height: 600px;
+            opacity: 1;
+            margin-bottom: 0;
+        }
+
+        .person-options .option-group { margin-bottom: 22px; }
+        .person-options .option-group:last-of-type { margin-bottom: 26px; }
+
+        .section-divider {
+            border: none;
+            border-top: 1px solid #45456a;
+            margin: 4px 0 22px;
+        }
+
+        .person-label-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .person-section-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: #cba6f7;
+        }
+
+        .person-section-line {
+            flex: 1;
+            height: 1px;
+            background: #45456a;
+        }
+
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .chip {
+            padding: 7px 16px;
+            border-radius: 999px;
+            border: 1px solid #45456a;
+            background: #2e2e4a;
+            color: #a6adc8;
+            font-size: 0.875rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            font-weight: 400;
+            white-space: nowrap;
+        }
+
+        .chip:hover {
+            border-color: #89b4fa;
+            color: #cdd6f4;
+            background: #333352;
+        }
+
+        .chip.active {
+            background: linear-gradient(135deg, #89b4fa22, #cba6f722);
+            border-color: #89b4fa;
+            color: #89b4fa;
+            font-weight: 500;
+        }
+
+        /* Person-group chips use purple accent */
+        .person-options .chip.active {
+            background: linear-gradient(135deg, #cba6f722, #f5c2e722);
+            border-color: #cba6f7;
+            color: #cba6f7;
+        }
+
+        .person-options .chip:hover {
+            border-color: #cba6f7;
+            color: #cdd6f4;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #363652;
+            margin: 28px 0;
+        }
+
+        textarea {
+            width: 100%;
+            background: #232338;
+            border: 1px solid #363652;
+            border-radius: 14px;
+            color: #cdd6f4;
+            font-family: inherit;
+            font-size: 0.95rem;
+            padding: 14px 18px;
+            resize: vertical;
+            min-height: 80px;
+            outline: none;
+            transition: border-color 0.2s;
+            line-height: 1.6;
+        }
+
+        textarea:focus { border-color: #89b4fa; }
+        textarea::placeholder { color: #45456a; }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+            align-items: center;
+        }
+
+        .btn-generate {
+            flex: 1;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: linear-gradient(135deg, #89b4fa, #cba6f7);
+            color: #1e1e2e;
+            box-shadow: 0 4px 16px rgba(137, 180, 250, 0.25);
+            letter-spacing: 0.02em;
+        }
+
+        .btn-generate:hover:not(:disabled) {
+            box-shadow: 0 6px 24px rgba(137, 180, 250, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-generate:disabled {
+            background: #45456a;
+            color: #6c7086;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-clear-all {
+            padding: 14px 20px;
+            border: 1px solid #45456a;
+            border-radius: 14px;
+            background: #333350;
+            color: #a6adc8;
+            font-size: 0.9rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-clear-all:hover { background: #3e3e5c; color: #cdd6f4; }
+
+        .result-panel { position: sticky; top: 24px; }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .result-title { font-size: 1rem; font-weight: 600; color: #89b4fa; }
+
+        .btn-copy {
+            background: #333350;
+            color: #a6adc8;
+            border: 1px solid #45456a;
+            padding: 8px 20px;
+            font-size: 0.875rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-copy:hover { background: #3e3e5c; color: #89b4fa; border-color: #89b4fa; }
+        .btn-copy.copied { background: #89b4fa; color: #1e1e2e; border-color: #89b4fa; }
+
+        .prompt-text {
+            color: #bac2de;
+            line-height: 1.9;
+            font-size: 1.02rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background: #232338;
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid #363652;
+            min-height: 200px;
+        }
+
+        .char-count {
+            text-align: right;
+            color: #6c7086;
+            font-size: 0.82rem;
+            margin-top: 10px;
+        }
+
+        .loading { display: none; text-align: center; padding: 60px 40px; }
+
+        .spinner {
+            width: 44px;
+            height: 44px;
+            border: 3px solid #363652;
+            border-top-color: #89b4fa;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading p { color: #6c7086; font-size: 1rem; }
+
+        .placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            gap: 14px;
+            color: #45456a;
+        }
+
+        .placeholder-icon { font-size: 3rem; }
+        .placeholder p { font-size: 1rem; text-align: center; line-height: 1.6; }
+
+        .error-box {
+            display: none;
+            background: #302030;
+            border: 1px solid #5a3040;
+            color: #f38ba8;
+            padding: 16px 22px;
+            border-radius: 14px;
+            margin-top: 18px;
+            font-size: 0.95rem;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .error-text { flex: 1; }
+
+        .btn-dismiss {
+            background: #5a3040;
+            color: #f38ba8;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-family: inherit;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .btn-dismiss:hover { background: #6a3a50; }
+
+
+        /* Model recommendation cards */
+        .models-section {
+            margin-top: 24px;
+            border-top: 1px solid #363652;
+            padding-top: 20px;
+        }
+
+        .models-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: #6c7086;
+            margin-bottom: 14px;
+            display: block;
+        }
+
+        .model-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .model-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #232338;
+            border: 1px solid #363652;
+            border-radius: 12px;
+            padding: 10px 16px;
+            text-decoration: none;
+            transition: all 0.18s ease;
+        }
+
+
+
+        .model-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #cdd6f4;
+            min-width: 140px;
+        }
+
+        .model-desc {
+            font-size: 0.82rem;
+            color: #6c7086;
+            flex: 1;
+        }
+
+        .model-tag {
+            font-size: 0.72rem;
+            font-weight: 500;
+            padding: 3px 10px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        .tag-free    { background: #1e3a2a; color: #a6e3a1; border: 1px solid #2a5a3a; }
+        .tag-paid    { background: #2a2a1e; color: #f9e2af; border: 1px solid #5a501e; }
+        .tag-freemium{ background: #1e2a3a; color: #89b4fa; border: 1px solid #1e3a5a; }
+        .tag-new     { background: #2a1e3a; color: #cba6f7; border: 1px solid #4a2a6a; }
+        .model-badges { display: flex; gap: 6px; align-items: center; }
+
+        .footer { margin-top: 50px; color: #a6adc8; font-size: 1rem; text-align: center; }
+        .footer a { color: #89b4fa; text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>PROMPT <span>BUILDER</span></h1>
+
+    <div class="container">
+        <div class="layout">
+
+            <!-- LEFT: Options -->
+            <div class="card">
+
+                <div class="option-group">
+                    <span class="option-label">Subject</span>
+                    <div class="chips" data-key="subject">
+                        <button class="chip" data-value="portrait of a person" data-shows-person="true">Portrait</button>
+                        <button class="chip" data-value="landscape / nature scene">Landscape</button>
+                        <button class="chip" data-value="architecture / cityscape">Architecture</button>
+                        <button class="chip" data-value="fantasy / sci-fi scene" data-shows-person="true">Fantasy / Sci-Fi</button>
+                        <button class="chip" data-value="abstract concept">Abstract</button>
+                        <button class="chip" data-value="animal / wildlife">Animal</button>
+                        <button class="chip" data-value="still life / food">Still Life</button>
+                        <button class="chip" data-value="vehicle / machinery">Vehicle</button>
+                    </div>
+                </div>
+
+                <!-- Person / Character details (revealed for Portrait & Fantasy/Sci-Fi) -->
+                <div class="person-options" id="personOptions">
+                    <div class="person-label-row">
+                        <span class="person-section-label">Person / Character</span>
+                        <div class="person-section-line"></div>
+                    </div>
+
+                    <div class="option-group">
+                        <span class="option-label">Gender</span>
+                        <div class="chips" data-key="gender">
+                            <button class="chip" data-value="male">Male</button>
+                            <button class="chip" data-value="female">Female</button>
+                        </div>
+                    </div>
+                    <div class="option-group">
+                        <span class="option-label">Ethnicity</span>
+                        <div class="chips" data-key="ethnicity">
+                            <button class="chip" data-value="Korean">Korean</button>
+                            <button class="chip" data-value="Japanese">Japanese</button>
+                            <button class="chip" data-value="Chinese">Chinese</button>
+                            <button class="chip" data-value="South Asian / Indian">Indian</button>
+                            <button class="chip" data-value="American">American</button>
+                            <button class="chip" data-value="British / English">British</button>
+                            <button class="chip" data-value="French">French</button>
+                            <button class="chip" data-value="Scandinavian">Scandinavian</button>
+                            <button class="chip" data-value="Latino / Hispanic">Latino</button>
+                            <button class="chip" data-value="Black / African">Black / African</button>
+                            <button class="chip" data-value="Middle Eastern">Middle Eastern</button>
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <span class="option-label">Age</span>
+                        <div class="chips" data-key="age">
+                            <button class="chip" data-value="child, around 8 years old">Child</button>
+                            <button class="chip" data-value="teenager, around 16 years old">Teen</button>
+                            <button class="chip" data-value="young adult in their mid-20s">20s</button>
+                            <button class="chip" data-value="adult in their mid-30s">30s</button>
+                            <button class="chip" data-value="adult in their mid-40s">40s</button>
+                            <button class="chip" data-value="middle-aged, around 55 years old">50s</button>
+                            <button class="chip" data-value="senior, around 70 years old">Senior</button>
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <span class="option-label">Expression</span>
+                        <div class="chips" data-key="expression">
+                            <button class="chip" data-value="warm smile">Smiling</button>
+                            <button class="chip" data-value="serious and composed expression">Serious</button>
+                            <button class="chip" data-value="contemplative, lost in thought">Contemplative</button>
+                            <button class="chip" data-value="confident and determined">Confident</button>
+                            <button class="chip" data-value="mysterious and enigmatic">Mysterious</button>
+                            <button class="chip" data-value="laughing joyfully">Laughing</button>
+                            <button class="chip" data-value="sad and melancholic">Sad</button>
+                            <button class="chip" data-value="surprised and wide-eyed">Surprised</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="option-group">
+                    <span class="option-label">Art Style</span>
+                    <div class="chips" data-key="style">
+                        <button class="chip" data-value="photorealistic photography">Photorealistic</button>
+                        <button class="chip" data-value="cinematic film still">Cinematic</button>
+                        <button class="chip" data-value="oil painting">Oil Painting</button>
+                        <button class="chip" data-value="watercolor illustration">Watercolor</button>
+                        <button class="chip" data-value="digital illustration">Digital Art</button>
+                        <button class="chip" data-value="anime / manga style">Anime / Manga</button>
+                        <button class="chip" data-value="detailed pencil sketch">Pencil Sketch</button>
+                        <button class="chip" data-value="vintage / analog film look">Vintage / Film</button>
+                        <button class="chip" data-value="concept art">Concept Art</button>
+                    </div>
+                </div>
+
+                <div class="option-group">
+                    <span class="option-label">Lighting</span>
+                    <div class="chips" data-key="lighting">
+                        <button class="chip" data-value="golden hour sunlight">Golden Hour</button>
+                        <button class="chip" data-value="studio soft box lighting">Studio</button>
+                        <button class="chip" data-value="dramatic cinematic lighting with deep shadows">Dramatic</button>
+                        <button class="chip" data-value="moody overcast natural light">Moody / Overcast</button>
+                        <button class="chip" data-value="night scene with neon lights">Night / Neon</button>
+                        <button class="chip" data-value="strong backlight / silhouette">Backlit</button>
+                        <button class="chip" data-value="soft diffused natural light">Natural / Soft</button>
+                        <button class="chip" data-value="harsh midday sunlight">Harsh Sunlight</button>
+                    </div>
+                </div>
+
+                <div class="option-group">
+                    <span class="option-label">Mood &amp; Atmosphere</span>
+                    <div class="chips" data-key="mood">
+                        <button class="chip" data-value="serene and peaceful">Serene</button>
+                        <button class="chip" data-value="dramatic and intense">Dramatic</button>
+                        <button class="chip" data-value="mysterious and eerie">Mysterious</button>
+                        <button class="chip" data-value="joyful and vibrant">Joyful</button>
+                        <button class="chip" data-value="dark and somber">Dark</button>
+                        <button class="chip" data-value="ethereal and dreamy">Ethereal</button>
+                        <button class="chip" data-value="epic and grand">Epic</button>
+                        <button class="chip" data-value="romantic and intimate">Romantic</button>
+                    </div>
+                </div>
+
+                <div class="option-group">
+                    <span class="option-label">Color Palette</span>
+                    <div class="chips" data-key="palette">
+                        <button class="chip" data-value="warm golden and amber tones">Warm Tones</button>
+                        <button class="chip" data-value="cool blues and teals">Cool Blues</button>
+                        <button class="chip" data-value="monochrome black and white">Monochrome</button>
+                        <button class="chip" data-value="vibrant saturated colors">Vibrant</button>
+                        <button class="chip" data-value="soft pastel colors">Pastel</button>
+                        <button class="chip" data-value="muted earth tones">Earth Tones</button>
+                        <button class="chip" data-value="neon cyberpunk color scheme">Neon / Cyberpunk</button>
+                        <button class="chip" data-value="desaturated muted tones">Desaturated</button>
+                    </div>
+                </div>
+
+                <div class="option-group">
+                    <span class="option-label">Composition</span>
+                    <div class="chips" data-key="shot">
+                        <button class="chip" data-value="extreme close-up shot">Close-Up</button>
+                        <button class="chip" data-value="medium shot">Medium Shot</button>
+                        <button class="chip" data-value="full body shot">Full Body</button>
+                        <button class="chip" data-value="wide angle shot">Wide Angle</button>
+                        <button class="chip" data-value="aerial bird's-eye view">Aerial</button>
+                        <button class="chip" data-value="macro detail shot">Macro</button>
+                        <button class="chip" data-value="cinematic 2.39:1 widescreen">Cinematic Wide</button>
+                        <button class="chip" data-value="low angle looking up">Low Angle</button>
+                    </div>
+                </div>
+
+                <div class="option-group">
+                    <span class="option-label">Quality &amp; Finish</span>
+                    <div class="chips" data-key="quality">
+                        <button class="chip" data-value="ultra-detailed 8K resolution, masterpiece quality">Ultra Detail</button>
+                        <button class="chip" data-value="film grain, 35mm analog texture">Film Grain</button>
+                        <button class="chip" data-value="sharp crisp details, professional photography">Professional</button>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="option-group">
+                    <span class="option-label">Additional Details</span>
+                    <textarea id="detailsInput" placeholder="Describe specific elements, characters, objects, or anything else you want included…" rows="3"></textarea>
+                </div>
+
+                <div class="error-box" id="errorBox">
+                    <span class="error-text" id="errorText"></span>
+                    <button class="btn-dismiss" id="dismissBtn">OK</button>
+                </div>
+
+                <div class="actions">
+                    <button class="btn-clear-all" id="clearAllBtn">Clear All</button>
+                    <button class="btn-generate" id="generateBtn">Generate Prompt</button>
+                </div>
+            </div>
+
+            <!-- RIGHT: Result -->
+            <div class="result-panel">
+                <div class="card">
+                    <div class="result-header">
+                        <span class="result-title">Generated Prompt</span>
+                        <button class="btn-copy" id="copyBtn" style="display:none">Copy</button>
+                    </div>
+
+                    <div class="loading" id="loading">
+                        <div class="spinner"></div>
+                        <p>Generating your prompt…</p>
+                    </div>
+
+                    <div class="placeholder" id="placeholder">
+                        <div class="placeholder-icon">✦</div>
+                        <p>Select options on the left and click<br><strong>Generate Prompt</strong></p>
+                    </div>
+
+                    <div id="promptWrap" style="display:none">
+                        <div class="prompt-text" id="promptText"></div>
+                        <div class="char-count" id="charCount"></div>
+                        <div class="models-section">
+                            <span class="models-label">Recommended Image AI Models</span>
+                                                        <div class=model-cards>
+                                <div class=model-card>
+                                    <span class="model-name">Google Nano Banana 2</span>
+                                    <span class=model-desc>Google next-gen creative image model</span>
+                                </div>
+                                <div class=model-card>
+                                    <span class="model-name">GPT Image 2</span>
+                                    <span class=model-desc>OpenAI latest image generation model</span>
+                                </div>
+                                <div class=model-card>
+                                    <span class="model-name">FLUX.2 Pro</span>
+                                    <span class=model-desc>Next-gen photorealism and fine detail</span>
+                                </div>
+                                <div class=model-card>
+                                    <span class="model-name">Midjourney v8.1</span>
+                                    <span class=model-desc>Best for artistic, stylized &amp; cinematic looks</span>
+                                </div>
+                                <div class=model-card>
+                                    <span class="model-name">Seedream 5 Lite</span>
+                                    <span class=model-desc>Fast, high-quality generation</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="footer">
+        Written in <a href="https://www.anthropic.com/news/claude-opus-4-7" target="_blank">Claude Opus 4.7</a>
+        and powered by <a href="https://ai.google.dev/gemini-api/docs/pricing#gemini-3.1-flash-lite" target="_blank">Google Gemini API</a>
+    </div>
+
+    <script>
+        const selections = {};
+        const personOptions = document.getElementById('personOptions');
+
+        // Chip toggle — single-select per group
+        document.querySelectorAll('.chips').forEach(group => {
+            const key = group.dataset.key;
+            selections[key] = '';
+
+            group.querySelectorAll('.chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    const wasActive = chip.classList.contains('active');
+                    group.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+
+                    if (!wasActive) {
+                        chip.classList.add('active');
+                        selections[key] = chip.dataset.value;
+                    } else {
+                        selections[key] = '';
+                    }
+
+                    // Show/hide person options based on subject selection
+                    if (key === 'subject') {
+                        const showPerson = !wasActive && chip.dataset.showsPerson === 'true';
+                        personOptions.classList.toggle('visible', showPerson);
+                        if (!showPerson) {
+                            // Clear person selections when hidden
+                            personOptions.querySelectorAll('.chip.active').forEach(c => c.classList.remove('active'));
+                            ['gender', 'age', 'expression'].forEach(k => selections[k] = '');
+                        }
+                    }
+                });
+            });
+        });
+
+        const generateBtn  = document.getElementById('generateBtn');
+        const clearAllBtn  = document.getElementById('clearAllBtn');
+        const detailsInput = document.getElementById('detailsInput');
+        const loading      = document.getElementById('loading');
+        const placeholder  = document.getElementById('placeholder');
+        const promptWrap   = document.getElementById('promptWrap');
+        const promptText   = document.getElementById('promptText');
+        const charCount    = document.getElementById('charCount');
+        const copyBtn      = document.getElementById('copyBtn');
+        const errorBox     = document.getElementById('errorBox');
+        const errorText    = document.getElementById('errorText');
+        const dismissBtn   = document.getElementById('dismissBtn');
+
+        clearAllBtn.addEventListener('click', () => {
+            document.querySelectorAll('.chip.active').forEach(c => c.classList.remove('active'));
+            Object.keys(selections).forEach(k => selections[k] = '');
+            detailsInput.value = '';
+            personOptions.classList.remove('visible');
+            promptWrap.style.display = 'none';
+            placeholder.style.display = 'flex';
+            copyBtn.style.display = 'none';
+            errorBox.style.display = 'none';
+        });
+
+        generateBtn.addEventListener('click', async () => {
+            const payload = { ...selections, details: detailsInput.value.trim() };
+            const hasSelection = Object.values(payload).some(v => v.trim());
+
+            if (!hasSelection) {
+                showError('Please select at least one option or add details.');
+                return;
+            }
+
+            generateBtn.disabled = true;
+            loading.style.display = 'block';
+            placeholder.style.display = 'none';
+            promptWrap.style.display = 'none';
+            copyBtn.style.display = 'none';
+            errorBox.style.display = 'none';
+
+            try {
+                const res = await fetch('generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                const data = await res.json();
+                if (data.error) {
+                    showError(data.error);
+                    placeholder.style.display = 'flex';
+                } else {
+                    promptText.textContent = data.prompt;
+                    charCount.textContent = data.prompt.length + ' characters';
+                    promptWrap.style.display = 'block';
+                    copyBtn.style.display = 'inline-block';
+                }
+            } catch (err) {
+                showError('Failed to connect to server.');
+                placeholder.style.display = 'flex';
+            } finally {
+                loading.style.display = 'none';
+                generateBtn.disabled = false;
+            }
+        });
+
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(promptText.textContent);
+            copyBtn.textContent = 'Copied!';
+            copyBtn.classList.add('copied');
+            setTimeout(() => {
+                copyBtn.textContent = 'Copy';
+                copyBtn.classList.remove('copied');
+            }, 2000);
+        });
+
+        dismissBtn.addEventListener('click', () => errorBox.style.display = 'none');
+
+        function showError(msg) {
+            errorText.textContent = msg;
+            errorBox.style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
