@@ -20,7 +20,7 @@ A web app for generating detailed AI image prompts. Select options from a visual
 
 ### Portrait & Character Options
 
-Selecting **Portrait** or **Fantasy / Sci-Fi** as the subject unlocks a Person / Character panel with four additional option groups:
+Selecting **Portrait** as the subject unlocks a Person / Character panel with four additional option groups:
 
 | Option | Choices |
 |---|---|
