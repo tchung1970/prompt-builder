@@ -76,7 +76,3 @@ Accepts JSON with any combination of these fields (at least one required):
 ## License
 
 MIT License — see [LICENSE](LICENSE) for details.
-
----
-
-*Written with Claude Opus 4.7 · Powered by Google Gemini API*
