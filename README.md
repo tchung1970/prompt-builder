@@ -13,10 +13,23 @@ A web app for generating detailed AI image prompts. Select options from a visual
 ## Features
 
 - Click-to-select chips for subject, style, lighting, mood, palette, composition, and quality
-- Portrait and Fantasy/Sci-Fi subjects reveal character options (gender, ethnicity, age, expression)
+- Portrait and Fantasy/Sci-Fi subjects reveal a dedicated **Person / Character** section (see below)
 - Gemini generates a 120–250 word flowing prompt from your selections
 - One-click copy to clipboard
 - Recommended image models shown alongside the generated prompt
+
+### Portrait & Character Options
+
+Selecting **Portrait** or **Fantasy / Sci-Fi** as the subject unlocks a Person / Character panel with four additional option groups:
+
+| Option | Choices |
+|---|---|
+| **Gender** | Male, Female |
+| **Ethnicity** | Korean, Japanese, Chinese, Indian, American, British, French, Scandinavian, Latino, Black / African, Middle Eastern |
+| **Age** | Child, Teen, 20s, 30s, 40s, 50s, Senior |
+| **Expression** | Smiling, Serious, Contemplative, Confident, Mysterious, Laughing, Sad, Surprised |
+
+These options combine with the main style, lighting, mood, and composition choices to produce highly specific character prompts — for example: a contemplative Korean woman in her 30s shot in cinematic lighting with a moody atmosphere and cool blue palette. The panel hides automatically when a non-portrait subject is selected, and any character selections are cleared.
 
 ## Stack
 
