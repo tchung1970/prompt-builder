@@ -73,9 +73,9 @@ Accepts a JSON body with any combination of the fields below. At least one field
 ### Subject
 Portrait, Landscape, Architecture, Fantasy/Sci-Fi, Abstract, Animal, Still Life, Vehicle
 
-> Selecting **Portrait** or **Fantasy/Sci-Fi** reveals the Person/Character section.
+> Selecting **Portrait** reveals the Person/Character section.
 
-### Person / Character *(portrait & fantasy only)*
+### Person / Character *(portrait only)*
 
 **Gender:** Male, Female
 
