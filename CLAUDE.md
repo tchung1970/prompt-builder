@@ -2,7 +2,8 @@
 
 A web app for generating detailed AI image prompts by selecting options from a visual chip-based UI. Selections are sent to Google Gemini, which writes a rich, coherent prompt ready to paste into any image generator.
 
-**Server:** https://ai.tchung.org/prompt-builder/
+**Server (English):** https://ai.tchung.org/prompt-builder/
+**Server (Korean):** https://ai.tchung.org/prompt-builder-ko/
 **GitHub:** https://github.com/tchung1970/prompt-builder
 
 ---

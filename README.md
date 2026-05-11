@@ -6,7 +6,8 @@ A web app for generating detailed AI image prompts. Select options from a visual
 
 ## Live Demo
 
-**https://ai.tchung.org/prompt-builder/**
+- English: **https://ai.tchung.org/prompt-builder/**
+- Korean (한국어): **https://ai.tchung.org/prompt-builder-ko/**
 
 ---
 

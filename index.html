@@ -24,7 +24,7 @@
             font-size: 3rem;
             font-weight: 700;
             letter-spacing: 0.04em;
-            margin-bottom: 48px;
+            margin-bottom: 12px;
             color: #fff;
         }
 
@@ -32,6 +32,24 @@
             background: linear-gradient(135deg, #89b4fa, #cba6f7);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        .lang-link {
+            display: inline-block;
+            margin-bottom: 40px;
+            color: #89b4fa;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 4px 14px;
+            border: 1px solid #45456a;
+            border-radius: 999px;
+            transition: all 0.2s ease;
+        }
+
+        .lang-link:hover {
+            border-color: #89b4fa;
+            background: #2e2e4a;
         }
 
         .container { width: 100%; max-width: 1300px; }
@@ -411,6 +429,7 @@
 </head>
 <body>
     <h1>PROMPT <span>BUILDER</span></h1>
+    <a class="lang-link" href="https://ai.tchung.org/prompt-builder-ko/">한국어 버전</a>
 
     <div class="container">
         <div class="layout">
